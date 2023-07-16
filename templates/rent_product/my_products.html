@@ -1,0 +1,87 @@
+{% extends 'main.html' %}
+{% block title %}My Products{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+{% endblock %}
+{% block content %}
+    <section class="container py-5">
+        <div class="mb-5 bg-light px-2 py-1 rounded d-flex justify-content-between align-items-center">
+            <h6 class="fw-light m-0"><i class="fa-solid fa-file-circle-check"></i> All Products</h6>
+            <div>
+                <a href="{{request.META.HTTP_REFERER}}" class="btn btn-dark btn-sm border-0 shadow-none">Back</a>
+                <a href="{% url 'add_product' %}" class="btn btn-dark btn-sm border-0 shadow-none"> Add Product</a>
+            </div>
+        </div>
+
+        <table id="productsTable" class="display">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for product in products %}
+                <tr>
+                    <td>
+                        <a href="{% url 'view_product' %}?product_id={{ product.id }}" class="text-dark">{{ product.name }}</a>
+                    </td>
+                    <td>{{ product.price }}</td>
+                    <td>{{ product.is_available }}</td>
+                    <td>
+                        <a href="{% url 'update_product'%}?product_id={{ product.id }}"
+                                class="btn btn-outline-dark shadow-none btn-sm"
+                        ><i class="fa-solid fa-pencil"></i></a>
+                        <a href="{% url 'delete_product'%}?product_id={{ product.id }}" class="btn btn-dark border-0 shadow-none btn-sm"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+            integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js">
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#productsTable').DataTable();
+        });
+    </script>
+    <script>
+        $("#updateProduct").on("show.bs.modal", function (event) {
+            const button = $(event.relatedTarget); // Button that triggered the modal
+            const id = button.data("product_id"); // Extract info from data-* attributes
+            const name = button.data("name"); // Extract info from data-* attributes
+            const price = button.data("price"); // Extract info from data-* attributes
+            const cover = button.data("cover"); // Extract info from data-* attributes
+            const category = button.data("category"); // Extract info from data-* attributes
+            const status = button.data("status"); // Extract info from data-* attributes
+            const description = button.data("description"); // Extract info from data-* attributes
+            console.log(cover)
+            const modal = $(this);
+            modal.find("#update_product").attr("action", "/rent/update-product?product_id=" + id);
+            modal.find("#name").attr("value", name);
+            modal.find("#price").attr("value", price);
+            document.getElementById('cover').setAttribute('href', cover)
+            document.getElementById('cover').innerText = cover
+            modal.find("#category").attr("value", category);
+            document.getElementById('description').innerHTML = description
+            document.getElementById('is_available').setAttribute('Checked', 'true')
+
+        });
+    </script>
+    <script>
+        $("#deleteProduct").on("show.bs.modal", function (event) {
+            const button = $(event.relatedTarget); // Button that triggered the modal
+            const id = button.data("product_id"); // Extract info from data-* attributes
+            const modal = $(this);
+            modal.find("#delete_product").attr("href", "/rent/delete-product?product_id=" + id);
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends 'main.html' %}
+{% block title %}My Requests{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+{% endblock %}
+{% block content %}
+    <section class="container py-5">
+        <div class="mb-5 bg-light px-2 py-1 rounded d-flex justify-content-between align-items-center">
+            <h6 class="fw-light m-0"><i class="fa-solid fa-file-circle-check"></i> All Requests</h6>
+            <div>
+                <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-dark btn-sm border-0 shadow-none">Back</a>
+            </div>
+        </div>
+
+        <table id="productsTable" class="display">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Req. By</th>
+                <th>Price</th>
+                <th>Rent Date</th>
+                <th>Payment</th>
+                <th>Account no.</th>
+                <th>TxnID.</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for rent in rents %}
+                <tr>
+                    <td>
+                        <a href="{% url 'view_product' %}?product_id={{ rent.product.id }}"
+                           class="text-dark">{{ rent.product.name }}</a>
+                    </td>
+                    <td>{{ rent.tenant.username }}</td>
+                    <td>{{ rent.product.price }}</td>
+                    <td>{{ rent.from_date }} to {{ rent.to_date }}</td>
+                    <td>{{ rent.method }}</td>
+                    <td>{{ rent.account_no }}</td>
+                    <td>{{ rent.txn_id }}</td>
+                    <td>
+                        {% if rent.is_approved %}
+                            Approved
+                        {% else %}
+                               Hold
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'approve_rent' %}?rent_id={{ rent.id }}"
+                           class="btn btn-outline-dark shadow-none btn-sm"
+                        ><i class="fa-solid fa-pencil"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+            integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js">
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#productsTable').DataTable();
+        });
+    </script>
+{% endblock %}

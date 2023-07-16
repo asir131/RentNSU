@@ -1,0 +1,73 @@
+{% extends 'main.html' %}
+{% block title %}My Requests{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+{% endblock %}
+{% block content %}
+    <section class="container py-5">
+        <div class="mb-5 bg-light px-2 py-1 rounded d-flex justify-content-between align-items-center">
+            <h6 class="fw-light m-0"><i class="fa-solid fa-file-circle-check"></i> All Requests</h6>
+            <div>
+                <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-dark btn-sm border-0 shadow-none">Back</a>
+            </div>
+        </div>
+
+        <table id="productsTable" class="display">
+            <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Request Time</th>
+                <th>Location</th>
+                <th>Payment</th>
+                <th>Account no.</th>
+                <th>TxnID.</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for ride in rides %}
+                <tr>
+                    <td>
+                        <a href="{% url 'view_vehicle' %}?vehicle_id={{ ride.vehicle.id }}"
+                           class="text-dark">{{ ride.vehicle.name }}</a>
+                    </td>
+                    <td>{{ ride.vehicle.price }}</td>
+                    <td>{{ ride.request_time }}</td>
+                    <td><a href="{{ ride.vehicle.map_link }}" target="_blank" class="text-dark">{{ ride.vehicle.from_location }} to {{ ride.vehicle.to_location }}</a></td>
+                    <td>{{ ride.method }}</td>
+                    <td>{{ ride.account_no }}</td>
+                    <td>{{ ride.txn_id }}</td>
+                    <td>
+                        {% if ride.is_approved %}
+                            Approved
+                        {% else %}
+                        {% endif %}
+                        Hold
+                    </td>
+                    <td>
+                        <a href="{% url 'update_request' %}?ride_id={{ ride.id }}"
+                           class="btn btn-outline-dark shadow-none btn-sm"
+                        ><i class="fa-solid fa-pencil"></i></a>
+                        <a href="{% url 'delete_request' %}?ride_id={{ ride.id }}"
+                           class="btn btn-dark border-0 shadow-none btn-sm"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+            integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js">
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#productsTable').DataTable();
+        });
+    </script>
+{% endblock %}

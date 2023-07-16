@@ -1,0 +1,40 @@
+{% extends 'main.html' %}
+{% block title %}
+    Home
+{% endblock %}
+{% block content %}
+
+
+    <div class="container my-5">
+        <div>
+            <p class="fs-4">Hello {{ user.username }}! <i class="fa-solid fa-face-smile-beam"></i>
+        </div>
+
+        <div class="container my-5">
+            <div class="search-box ">
+               <input type="text" class="search-input w-80" placeholder="Search..">
+         
+               <button class="btn btn-outline-dark w-8">
+                 <i class="fas fa-search"></i>
+               </button>
+            </div>
+         </div>
+
+        <div class="row row-cols-2 row-cols-md-4 g-3">
+            <div class="col">
+                <div class="text-center border rounded rounded-3 p-4">
+                    <div class="p-2 bg-light rounded-circle mx-auto" style="width: 40px; height: 40px">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <p class="m-0 mt-2">Date Joined</p>
+                    <p class="m-0 fs-3">{{ user.date_joined |date:"M d, Y" }}</p>
+                </div>
+            </div>
+            
+                
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

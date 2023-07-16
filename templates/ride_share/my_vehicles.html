@@ -1,0 +1,65 @@
+{% extends 'main.html' %}
+{% block title %}My Vehicles{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
+{% endblock %}
+{% block content %}
+    <section class="container py-5">
+        <div class="mb-5 bg-light px-2 py-1 rounded d-flex justify-content-between align-items-center">
+            <h6 class="fw-light m-0"><i class="fa-solid fa-file-circle-check"></i> All vehicles</h6>
+            <div>
+                <a href="{{ request.META.HTTP_REFERER }}" class="btn btn-dark btn-sm border-0 shadow-none">Back</a>
+                <a href="{% url 'add_vehicle' %}" class="btn btn-dark btn-sm border-0 shadow-none"> Add vehicle</a>
+            </div>
+        </div>
+
+        <table id="vehiclesTable" class="display">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>From Location</th>
+                <th>To Location</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for vehicle in vehicles %}
+                <tr>
+                    <td>
+                        <a href="{% url 'view_vehicle' %}?vehicle_id={{ vehicle.id }}"
+                           class="text-dark">{{ vehicle.name }}</a>
+                    </td>
+                    <td>{{ vehicle.from_location }}</td>
+                    <td>{{ vehicle.to_location }}</td>
+                    <td>{% if vehicle.is_available == True %}
+                        Available
+                    {% else %}
+                        On Ride
+                    {% endif %} </td>
+                    <td>
+                        <a href="{% url 'update_vehicle' %}?vehicle_id={{ vehicle.id }}"
+                           class="btn btn-outline-dark shadow-none btn-sm"
+                        ><i class="fa-solid fa-pencil"></i></a>
+                        <a href="{% url 'delete_vehicle' %}?vehicle_id={{ vehicle.id }}"
+                           class="btn btn-dark border-0 shadow-none btn-sm"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}
+{% block scripts %}
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+            integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js">
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#vehiclesTable').DataTable();
+        });
+    </script>
+
+{% endblock %}
